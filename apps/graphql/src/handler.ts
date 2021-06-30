@@ -1,4 +1,5 @@
 import { APIGatewayProxyHandler } from 'aws-lambda';
+import { format } from 'date-fns';
 
 export const helloWorld: APIGatewayProxyHandler = async (
   event,
@@ -9,8 +10,7 @@ export const helloWorld: APIGatewayProxyHandler = async (
     statusCode: 200,
     body: JSON.stringify(
       {
-        message:
-          'Go Serverless Webpack (Typescript) v1.0! Your function executed successfully!',
+        message: format(new Date(), "'Today is a' eeee"),
         input: event,
       },
       null,
