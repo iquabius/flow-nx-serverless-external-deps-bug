@@ -1,6 +1,120 @@
 {
   "version": 2,
-  "projects": {},
+  "projects": {
+    "graphql": {
+      "root": "apps/graphql",
+      "sourceRoot": "apps/graphql/src",
+      "projectType": "application",
+      "prefix": "graphql",
+      "generators": {},
+      "targets": {
+        "build": {
+          "executor": "@flowaccount/nx-serverless:build",
+          "options": {
+            "outputPath": "dist/apps/graphql",
+            "package": "apps/graphql",
+            "serverlessConfig": "apps/graphql/serverless.yml",
+            "servicePath": "apps/graphql",
+            "tsConfig": "apps/graphql/tsconfig.app.json",
+            "provider": "aws",
+            "processEnvironmentFile": "env.json"
+          },
+          "configurations": {
+            "dev": {
+              "optimization": false,
+              "sourceMap": false,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                }
+              ]
+            },
+            "production": {
+              "optimization": true,
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                }
+              ],
+              "fileReplacements": [
+                {
+                  "replace": "apps/graphql/environment.ts",
+                  "with": "apps/graphql/environment.prod.ts"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "executor": "@flowaccount/nx-serverless:offline",
+          "options": {
+            "buildTarget": "graphql:build",
+            "config": "apps/graphql/serverless.yml",
+            "location": "dist/apps/graphql",
+            "port": 7777
+          },
+          "configurations": {
+            "dev": {
+              "buildTarget": "graphql:build:dev"
+            },
+            "production": {
+              "buildTarget": "graphql:build:production"
+            }
+          }
+        },
+        "deploy": {
+          "executor": "@flowaccount/nx-serverless:deploy",
+          "options": {
+            "buildTarget": "graphql:build:production",
+            "config": "apps/graphql/serverless.yml",
+            "location": "dist/apps/graphql",
+            "package": "dist/apps/graphql",
+            "stage": "dev"
+          }
+        },
+        "destroy": {
+          "executor": "@flowaccount/nx-serverless:destroy",
+          "options": {
+            "buildTarget": "graphql:build:production",
+            "config": "apps/graphql/serverless.yml",
+            "location": "dist/apps/graphql",
+            "package": "dist/apps/graphql"
+          }
+        },
+        "lint": {
+          "executor": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "exclude": [
+              "**/node_modules/**",
+              "!apps/graphql/**/*"
+            ],
+            "tsConfig": [
+              "apps/graphql/tsconfig.spec.json"
+            ]
+          }
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": [
+            "coverage/apps/graphql"
+          ],
+          "options": {
+            "jestConfig": "apps/graphql/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    }
+  },
   "cli": {
     "defaultCollection": "@nrwl/workspace"
   }
