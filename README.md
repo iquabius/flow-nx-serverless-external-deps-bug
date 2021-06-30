@@ -1,4 +1,6 @@
+External dependency issue reported:
 
+https://github.com/flowaccount/nx-plugins/issues/86
 
 # FlowNxServerlessExternalDepsBug
 
